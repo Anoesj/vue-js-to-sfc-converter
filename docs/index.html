@@ -53,27 +53,57 @@
     <script defer>
       const { log } = console;
 
+      // Ironically, we’re using 'template' instead of a Vue SFC for simplicity :D
       Vue.createApp({
 
         template:  `<section class="js-file">
                       <p>Paste .js file</p>
-                      <textarea id="js-file-input" v-model="inputString"></textarea>
+                      <textarea
+                        v-model="inputString"
+                        :placeholder="inputPlaceholder"
+                      ></textarea>
                     </section>
+
                     <section class="vue-file">
                       <p>Output .vue file</p>
-                      <textarea readonly id="vue-file-output" v-model="outputString"></textarea>
+                      <textarea
+                        readonly
+                        v-model="outputString"
+                        :placeholder="outputPlaceholder"
+                      ></textarea>
                     </section>`,
 
         data () {
           return {
             inputString: '',
             outputString: '',
+            inputPlaceholder: '',
+            outputPlaceholder: '',
           };
+        },
+
+        async created () {
+          try {
+            const res = await fetch('example-file.js'),
+                  text = await res.text();
+
+            this.inputPlaceholder = text;
+            this.outputPlaceholder = this.convert(text);
+          }
+          catch {
+            // Do absolutely nothing
+          }
         },
 
         watch: {
           inputString () {
-            let outputString = this.inputString;
+            this.outputString = this.convert(this.inputString);
+          },
+        },
+
+        methods: {
+          convert (jsFileText) {
+            let outputString = jsFileText;
 
             let template = outputString.match(/(template)\s*\:\s+(\`(.|[\r\n])+\`\s*,[\r\n\s]*)/gm);
 
@@ -124,7 +154,7 @@
             // Use prettier functions notation, but actually a bit out of scope for this tool.
             // outputString = outputString.replaceAll(/\:\s*(function)\s*\(\)\s*\{/g, ' () {');
 
-            this.outputString = outputString;
+            return outputString;
           },
         },
 
