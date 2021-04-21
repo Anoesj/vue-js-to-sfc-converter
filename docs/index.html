@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script src="https://unpkg.com/vue@next"></script>
+    <link rel="icon" href="data:;base64,iVBORwOKGO="/>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html, body {
+        height: 100%;
+      }
+
+      body {
+        padding: 75px 50px 50px;
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      }
+
+      #app {
+        margin: 0 auto;
+        min-height: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 50px;
+        width: 100%;
+      }
+
+      section {
+        display: flex;
+        align-items: stretch;
+        position: relative;
+      }
+
+      section p {
+        position: absolute;
+        bottom: calc(100% + 15px);
+        margin: 0;
+      }
+
+      textarea {
+        width: 100%;
+        flex: 1 1 auto;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="app"></div>
+
+    <script defer>
+      const { log } = console;
+
+      Vue.createApp({
+
+        template:  `<section class="js-file">
+                      <p>Paste .js file</p>
+                      <textarea id="js-file-input" v-model="inputString"></textarea>
+                    </section>
+                    <section class="vue-file">
+                      <p>Output .vue file</p>
+                      <textarea readonly id="vue-file-output" v-model="outputString"></textarea>
+                    </section>`,
+
+        data () {
+          return {
+            inputString: '',
+            outputString: '',
+          };
+        },
+
+        watch: {
+          inputString () {
+            let outputString = this.inputString;
+
+            let template = outputString.match(/(template)\s*\:\s+(\`(.|[\r\n])+\`\s*,[\r\n\s]*)/gm);
+
+            if (template !== null) {
+              // Always just use the first match
+              template = template[0];
+
+              outputString = outputString.replace(template, '');
+
+              // log({ template, outputString });
+
+              // Get rid of “template:”
+              template = template.replace(/(template)\s*\:\s*/gm, '');
+
+              // Get rid of whitespace
+              template = template.trim();
+
+              if (template.endsWith(',')) {
+                // Get rid of comma at the end
+                template = template.slice(0, -1);
+              }
+
+              // Get rid of template literal quotes
+              template = template.slice(1, -1);
+
+              // Indent every line with 2 spaces
+              template = template.split('\n').map(line => `  ${line}`).join('\n');
+
+              // TIL: putting a <script> closing inside a comment/string is actually interpreted as the parent script’s closing tag o_O
+              outputString = `<template>\n${template}\n</template>\n\n<script>\n${outputString.split('\n').map(line => `  ${line}`).join('\n')}\n</scr` + `ipt>`;
+
+              // Find “export default someWord”
+              const exportNames = Array.from(outputString.matchAll(/[\r\n\s]*export default (?<name>\w+);/gm));
+
+              if (exportNames.length) {
+                const exportName = exportNames[0]?.groups?.name;
+
+                if (exportName) {
+                  // Remove export statement
+                  outputString = outputString.replace(exportNames[0][0], '');
+
+                  const re = new RegExp(`(const|let|var)[\\s\\r\\n]+(${exportName})[\\s\\r\\n]*\=[\\s\\r\\n]*`, 'gm');
+                  outputString = outputString.replace(re, 'export default ');
+                }
+              }
+            }
+
+            // Use prettier functions notation, but actually a bit out of scope for this tool.
+            // outputString = outputString.replaceAll(/\:\s*(function)\s*\(\)\s*\{/g, ' () {');
+
+            this.outputString = outputString;
+          },
+        },
+
+      }).mount('#app');
+    </script>
+  </body>
+</html>
