@@ -133,7 +133,7 @@
               template = template.split('\n').map(line => `  ${line}`).join('\n');
 
               // TIL: putting a <script> closing inside a comment/string is actually interpreted as the parent script’s closing tag o_O
-              outputString = `<template>\n${template}\n</template>\n\n<script>\n${outputString.split('\n').map(line => `  ${line}`).join('\n')}\n</scr` + `ipt>`;
+              outputString = `<template>\n${template}\n</template>\n\n<script>\n${outputString.trim().split('\n').map(line => `  ${line}`).join('\n')}\n</scr` + `ipt>`;
 
               // Find “export default someWord”
               const exportNames = Array.from(outputString.matchAll(/[\r\n\s]*export default (?<name>\w+);/gm));
