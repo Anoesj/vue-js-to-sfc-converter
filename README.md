@@ -1,0 +1,2 @@
+# Vue .js file to SFC converter
+This tool tries to convert a Vue `.js` file to a `.vue` file. It tries to find a `template` property in a Vue component in a `.js` file and moves it to the top of the SFC (in a `<template>` tag) while wrapping the rest in a `<script>` tag.
