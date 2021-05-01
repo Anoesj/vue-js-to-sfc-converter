@@ -1,5 +1,8 @@
 {
 	"scripts": {
-		"serve": "npx serve docs"
+		"serve": "pnpx serve docs"
+	},
+	"devDependencies": {
+		"serve": "^11.3.2"
 	}
 }

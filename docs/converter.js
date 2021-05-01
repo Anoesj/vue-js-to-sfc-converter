@@ -14,7 +14,7 @@ const app = createApp({
   },
 
   template:  `<section class="js-file">
-                <p><strong>Paste your .js file below</strong></p>
+                <p><strong>Paste your .js file here</strong></p>
                 <textarea
                   v-model="inputString"
                   :placeholder="inputPlaceholder"
@@ -22,7 +22,7 @@ const app = createApp({
               </section>
 
               <section class="vue-file">
-                <p><strong>...and your .vue file will appear below <img src="https://openmoji.org/data/color/svg/1F916.svg" height="34"/></strong></p>
+                <p><strong>...and your .vue file will appear here <img src="https://openmoji.org/data/color/svg/1F916.svg" height="34"/></strong></p>
                 <textarea
                   readonly
                   v-model="outputString"
