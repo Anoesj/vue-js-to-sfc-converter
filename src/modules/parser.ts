@@ -1,8 +1,8 @@
 import { ref, computed, watchEffect } from 'vue';
 
 export function useParser () {
-  const parser = ref(null);
-  const parserAvailable = computed(() => parser.value != null);
+  const parser = ref<typeof import('kataw') | null>(null);
+  const parserAvailable = computed<boolean>(() => parser.value != null);
 
   watchEffect(() => {
     switch (parserAvailable.value) {
@@ -15,7 +15,7 @@ export function useParser () {
     }
   });
 
-  import('https://cdn.skypack.dev/kataw').then(mod => {
+  import('kataw').then(mod => {
     parser.value = mod;
   });
 

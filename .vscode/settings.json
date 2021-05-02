@@ -5,10 +5,13 @@
   "eslint.packageManager": "pnpm",
   "eslint.validate": [
     "javascript",
+    "typescript",
     "vue",
   ],
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "volar.tsPlugin": true,
+  "volar.preferredTagNameCase": "pascal",
+  "volar.preferredAttrNameCase": "kebab",
 }

@@ -8,14 +8,20 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "kataw": "^0.0.19",
     "vue": "^3.0.5"
   },
   "devDependencies": {
     "@fonkel/eslint-config-fonkel": "^0.2.4",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
     "@vitejs/plugin-vue": "^1.2.2",
     "@vue/compiler-sfc": "^3.0.5",
+    "@vue/eslint-config-typescript": "^7.0.0",
     "eslint": "^7.25.0",
     "eslint-plugin-vue": "^7.9.0",
+    "sass": "^1.32.12",
+    "typescript": "^4.2.4",
     "vite": "^2.2.3"
   }
 }
