@@ -1,33 +1,24 @@
 <template>
-  <section class="js-file">
-    <p><strong>Paste your .js file here</strong></p>
+  <AppSection
+    v-model:contents="input"
+    :placeholder="inputPlaceholder"
+  >
+    <strong>Paste your .js file here</strong>
+  </AppSection>
 
-    <textarea
-      v-model="input"
-      :placeholder="inputPlaceholder"
-    ></textarea>
-  </section>
-
-  <section class="vue-file">
-    <p>
-      <strong>...and your .vue file will appear here</strong>
-      <img
-        src="https://openmoji.org/data/color/svg/1F916.svg"
-        loading="lazy"
-        height="34"
-      />
-      <CopyButton
-        :animated="true"
-        :contents="output"
-      />
-    </p>
-
-    <textarea
-      readonly
-      v-model="output"
-      :placeholder="outputPlaceholder"
-    ></textarea>
-  </section>
+  <AppSection
+    v-model:contents="output"
+    :placeholder="outputPlaceholder"
+    :readonly="true"
+  >
+    <strong>...and your .vue file will appear below</strong>
+    <img
+      src="https://openmoji.org/data/color/svg/1F916.svg"
+      loading="lazy"
+      height="34"
+    />
+    <CopyButton :contents="output"/>
+  </AppSection>
 
   <Transition name="fade" appear>
     <LoadingSpinner v-if="converting"/>
@@ -36,6 +27,7 @@
 
 <script lang="ts">
   import { defineComponent } from 'vue';
+  import AppSection from './components/AppSection.vue';
   import LoadingSpinner from './components/LoadingSpinner.vue';
   import CopyButton from './components/CopyButton.vue';
   import { useParser } from './modules/parser';
@@ -53,6 +45,7 @@
     },
 
     components: {
+      AppSection,
       LoadingSpinner,
       CopyButton,
     },
@@ -156,20 +149,6 @@
     --color-2-l: 29%;
   }
 
-  @keyframes pop {
-    0% {
-      transform: none;
-    }
-
-    10% {
-      transform: scale(1.3);
-    }
-
-    100% {
-      transform: none;
-    }
-  }
-
   @keyframes fade {
     0% { opacity: 0; }
     100% { opacity: 1; }
@@ -185,75 +164,73 @@
     opacity: 0;
   }
 
+  :root {
+    --page-padding-x: 40px;
+    --page-padding-y: 40px;
+  }
+
   html, body {
     height: 100%;
   }
 
   body {
-    padding: 90px 40px 40px;
+    padding: calc(var(--page-padding-y) * 1.25) var(--page-padding-x) var(--page-padding-y);
     margin: 0;
     font-family: "Source Sans Pro", "Helvetica Neue", Arial, sans-serif;
     background-color: hsl(240, 4%, 11%);
     // background-color: hsl(var(--color-2-h), 3%, 6%);
     color: hsl(var(--color-1-h), var(--color-1-s), var(--color-1-l));
+    overflow-x: hidden;
   }
 
   #app {
     margin: 0 auto;
     min-height: 100%;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    grid-template: auto 1fr / 1fr 1fr;
+    grid-auto-flow: column;
+    column-gap: 40px;
+    row-gap: 20px;
     width: 100%;
   }
 
-  section {
-    display: flex;
-    align-items: stretch;
-    justify-content: stretch;
+  button {
+    font-family: inherit;
+    word-spacing: 0.05em;
+    text-decoration: none;
+    padding: 0.75em 2em;
+    border-radius: 2em;
+    display: inline-block;
+    transition: all 0.15s ease;
     position: relative;
+    border: none;
+    background-color: hsl(var(--color-1-h), var(--color-1-l), var(--color-1-s));
+    color: #f6f6f6;
+    margin: 0;
+    font-size: 0.65em;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    min-width: 5em;
+    text-align: center;
 
-    p {
-      position: absolute;
-      bottom: calc(100% + 16px);
-      margin: 0;
-      width: 100%;
-      font-size: 23px;
-
-      img {
-        position: absolute;
-        transform: translate(4px, -1px);
-      }
+    &:disabled {
+      background-color: #4f5959;
     }
-  }
 
-  textarea {
-    width: 100%;
-    flex: 1 1 auto;
-    font-family: "Droid Sans Mono", Consolas, "SF Mono", monospace;
-    line-height: 1.3;
-    padding: 12px 9px;
-    background-color: #222225;
-    color: white;
-    border-radius: 4px;
-    border: 2px solid hsla(var(--color-1-h), 100%, 90%, 0.2);
-    transition: all .15s $easing;
-    box-shadow: inset 0 0 5px -1px rgba(0, 0, 0, 0.2);
+    &:not(:disabled) {
+      cursor: pointer;
+    }
 
-    &:focus {
-      border: 2px solid hsla(var(--color-1-h), 100%, 84%, 0.6);
+    &:focus-visible {
+      outline: revert;
+    }
+
+    &:focus:not(:focus-visible) {
       outline: none;
-      box-shadow: inset 0 0 5px -1px rgba(0, 0, 0, 0.2), 0 0 30px 0 hsla(var(--color-1-h), 100%, 60%, 0.4);
     }
   }
 
-  // button {
-  // }
   .copy-button {
     float: right;
-  }
-
-  .button--animated {
-    animation: pop 0.7s ease-out,
   }
 </style>

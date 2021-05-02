@@ -9,8 +9,12 @@
 
 <style lang="scss">
   @keyframes spin {
-    0% { transform: translate(-50%, -50%) rotate(0turn); }
-    100% { transform: translate(-50%, -50%) rotate(1turn); }
+    0% {
+      transform: translate(-50%, -50%) rotate(0turn);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(1turn);
+    }
   }
 
   .loading-spinner {
